@@ -14,5 +14,5 @@ release.properties
 yo/.sass-cache/
 yo/.tmp/
 yo/dist/
-yo/node_modules
-yo/app/bower_components
+yo/node_modules/
+yo/app/bower_components/
