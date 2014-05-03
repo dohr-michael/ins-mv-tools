@@ -13,200 +13,79 @@
     <groupId>org.mdo.rpg.tools</groupId>
     <artifactId>ins-mv</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <packaging>jar</packaging>
+    <packaging>pom</packaging>
 
     <properties>
-        <!--<spring-boot.version>1.0.2.RELEASE</spring-boot.version>-->
-        <!--<spring-boot-maven-plugin.version>1.0.2.RELEASE</spring-boot-maven-plugin.version>-->
         <spring-data-mongodb.version>1.4.2.RELEASE</spring-data-mongodb.version>
         <spring.version>4.0.3.RELEASE</spring.version>
-        <!-- Spring boot configurations -->
-        <!--<start-class>org.mdo.rpg.tools.insmv.Main</start-class>-->
+        <nosqlunit-mongodb.version>0.7.9</nosqlunit-mongodb.version>
     </properties>
-    <dependencies>
-        <!-- Spring data mongo -->
-        <dependency>
-            <groupId>org.springframework.data</groupId>
-            <artifactId>spring-data-mongodb</artifactId>
-            <version>${spring-data-mongodb.version}</version>
-        </dependency>
-
-        <!-- Utils -->
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-            <version>17.0</version>
-        </dependency>
-
-        <!-- YAML parser -->
-        <dependency>
-            <groupId>org.yaml</groupId>
-            <artifactId>snakeyaml</artifactId>
-            <version>1.13</version>
-            <scope>runtime</scope>
-        </dependency>
-        <!-- @Inject annotation -->
-        <dependency>
-            <groupId>javax.inject</groupId>
-            <artifactId>javax.inject</artifactId>
-            <version>1</version>
-        </dependency>
-        <!-- Spring boot -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
-        <!-- Spring boot test -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <!-- In-memory MongoDB for tests -->
-        <dependency>
-            <groupId>com.lordofthejars</groupId>
-            <artifactId>nosqlunit-mongodb</artifactId>
-            <version>0.7.9</version>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
+    <dependencyManagement>
+        <dependencies>
+            <!-- Utils -->
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>17.0</version>
+            </dependency>
+            <!-- @Inject annotation -->
+            <dependency>
+                <groupId>javax.inject</groupId>
+                <artifactId>javax.inject</artifactId>
+                <version>1</version>
+            </dependency>
+            <!-- In-memory MongoDB for tests -->
+            <dependency>
+                <groupId>com.lordofthejars</groupId>
+                <artifactId>nosqlunit-mongodb</artifactId>
+                <version>${nosqlunit-mongodb.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <configuration>
+                        <encoding>UTF-8</encoding>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>exec-maven-plugin</artifactId>
+                    <version>1.2.1</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
     <profiles>
         <profile>
             <id>backend</id>
             <activation>
                 <activeByDefault>true</activeByDefault>
             </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.springframework.boot</groupId>
-                        <artifactId>spring-boot-maven-plugin</artifactId>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-surefire-plugin</artifactId>
-                        <version>2.12.4</version>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-resources-plugin</artifactId>
-                        <version>2.6</version>
-                        <configuration>
-                            <encoding>UTF-8</encoding>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
+            <modules>
+                <module>ins-mv-tools-backend</module>
+            </modules>
         </profile>
         <profile>
             <id>frontend</id>
             <activation>
-                <activeByDefault>false</activeByDefault>
+                <activeByDefault>true</activeByDefault>
             </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-clean-plugin</artifactId>
-                        <version>2.5</version>
-                        <configuration>
-                            <!-- Yeoman / Grunt -->
-                            <filesets>
-                                <fileset>
-                                    <directory>${basedir}/src/main/yo/dist</directory>
-                                </fileset>
-                                <fileset>
-                                    <directory>${basedir}/src/main/yo/.tmp</directory>
-                                </fileset>
-                                <fileset>
-                                    <directory>${basedir}/src/main/yo/.sass-cache</directory>
-                                </fileset>
-                                <fileset>
-                                    <directory>${basedir}/src/main/yo/app/bower_components</directory>
-                                </fileset>
-                                <fileset>
-                                    <directory>${basedir}/src/main/yo/node_modules</directory>
-                                </fileset>
-                            </filesets>
-                        </configuration>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>exec-maven-plugin</artifactId>
-                        <version>1.2.1</version>
-                        <executions>
-                            <execution>
-                                <id>npm</id>
-                                <phase>generate-sources</phase>
-                                <goals>
-                                    <goal>exec</goal>
-                                </goals>
-                                <configuration>
-                                    <executable>npm</executable>
-                                    <arguments>
-                                        <argument>install</argument>
-                                    </arguments>
-                                    <workingDirectory>${basedir}/src/main/yo</workingDirectory>
-                                </configuration>
-                            </execution>
-                            <execution>
-                                <id>bower</id>
-                                <phase>generate-sources</phase>
-                                <goals>
-                                    <goal>exec</goal>
-                                </goals>
-                                <configuration>
-                                    <executable>bower</executable>
-                                    <arguments>
-                                        <argument>install</argument>
-                                    </arguments>
-                                    <workingDirectory>${basedir}/src/main/yo</workingDirectory>
-                                </configuration>
-                            </execution>
-                            <execution>
-                                <id>grunt</id>
-                                <phase>generate-sources</phase>
-                                <goals>
-                                    <goal>exec</goal>
-                                </goals>
-                                <configuration>
-                                    <executable>grunt</executable>
-                                    <workingDirectory>${basedir}/src/main/yo</workingDirectory>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-resources-plugin</artifactId>
-                        <version>2.6</version>
-                        <configuration>
-                            <encoding>UTF-8</encoding>
-                        </configuration>
-                        <executions>
-                            <execution>
-                                <id>copy-resources</id>
-                                <phase>prepare-package</phase>
-                                <goals>
-                                    <goal>copy-resources</goal>
-                                </goals>
-                                <configuration>
-                                    <outputDirectory>${basedir}/target/classes/static</outputDirectory>
-                                    <resources>
-                                        <resource>
-                                            <directory>src/main/yo/dist</directory>
-                                            <filtering>true</filtering>
-                                        </resource>
-                                    </resources>
-                                </configuration>
-                            </execution>
-                            <execution>
-
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
+            <modules>
+                <!--<module>ins-mv-tools-web-frontend</module>-->
+            </modules>
         </profile>
     </profiles>
 </project>
