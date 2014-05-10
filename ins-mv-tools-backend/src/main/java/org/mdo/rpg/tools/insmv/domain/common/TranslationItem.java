@@ -1,6 +1,7 @@
 package org.mdo.rpg.tools.insmv.domain.common;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Locale;
 
@@ -10,6 +11,7 @@ import java.util.Locale;
  * @author Michaël DOHR
  * @since 30/04/14
  */
+@Document
 public class TranslationItem {
 
     @Id

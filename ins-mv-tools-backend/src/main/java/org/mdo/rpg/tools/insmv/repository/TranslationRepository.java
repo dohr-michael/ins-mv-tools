@@ -17,6 +17,14 @@ import java.util.Locale;
 public interface TranslationRepository extends MongoRepository<TranslationItem, String> {
 
     /**
+     * Find translations by category and ordered by locale.
+     *
+     * @param category the category
+     * @return the list of translation
+     */
+    public List<TranslationItem> findByCategoryOrderByLocale(String category);
+
+    /**
      * Find translations by category and locale.
      *
      * @param category the category
